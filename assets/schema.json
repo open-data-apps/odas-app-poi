@@ -1,0 +1,62 @@
+{
+  "$schema": "https://frictionlessdata.io/schemas/table-schema.json",
+  "title": "POIs Data Schema",
+  "description": "Schema für Point of Interest (POI)",
+  "fields": [
+    {
+      "name": "_id",
+      "title": "POI ID",
+      "type": "integer",
+      "description": "Eindeutige POI-ID (automatisch generiert)",
+      "constraints": {
+        "required": false,
+        "unique": true
+      }
+    },
+    {
+      "name": "name",
+      "title": "Name",
+      "type": "string",
+      "description": "Name des Points of Interest",
+      "constraints": {
+        "required": true,
+        "minLength": 1,
+        "maxLength": 200
+      }
+    },
+    {
+      "name": "latitude",
+      "title": "Breitengrad",
+      "type": "number",
+      "description": "Breitengrad im WGS84-Format (Dezimalgrad)",
+      "constraints": {
+        "required": true,
+        "minimum": -90,
+        "maximum": 90
+      }
+    },
+    {
+      "name": "longitude",
+      "title": "Längengrad",
+      "type": "number",
+      "description": "Längengrad im WGS84-Format (Dezimalgrad)",
+      "constraints": {
+        "required": true,
+        "minimum": -180,
+        "maximum": 180
+      }
+    },
+    {
+      "name": "description",
+      "title": "Beschreibung",
+      "type": "string",
+      "description": "Beschreibung des POI",
+      "constraints": {
+        "required": false,
+        "maxLength": 1000
+      }
+    }
+  ],
+  "primaryKey": ["_id"],
+  "missingValues": ["", "null"]
+}

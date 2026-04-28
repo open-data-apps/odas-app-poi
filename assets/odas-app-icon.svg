@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="512"
+   height="512"
+   viewBox="0 0 512 512"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.1-rc (832c77b156, 2025-02-28)"
+   sodipodi:docname="POI_Logo.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     inkscape:zoom="1.5683594"
+     inkscape:cx="255.6812"
+     inkscape:cy="153.98257"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <!-- Hintergrund -->
+    <rect
+       width="512"
+       height="512"
+       fill="#2980b9"
+       rx="50"
+       ry="50"
+       id="rect1"
+       x="-2.1006372e-08"
+       y="0.18306349" />
+    <!-- \u00dcberarbeiteter Karten-Pin als Marker -->
+    <path
+       d="m 255.36239,81.458281 c -68,0 -120,51.999999 -120,119.999999 0,80 120,180 120,180 0,0 120,-100 120,-180 0,-68 -52,-119.999999 -120,-119.999999 z"
+       fill="#ffffff"
+       id="path1" />
+    <!-- Innerer Kreis als Highlight f\u00fcr den Point of Interest -->
+    <circle
+       cx="255.3624"
+       cy="209.45828"
+       r="48"
+       fill="#f1c40f"
+       id="circle1" />
+  </g>
+</svg>
