@@ -1,64 +1,27 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Hintergrund-Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7eb8f7"/>
+      <stop offset="100%" stop-color="#3d3fa5"/>
+    </linearGradient>
+    <!-- Schatten-Filter -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000" flood-opacity="0.30"/>
+    </filter>
+  </defs>
 
-<svg
-   width="512"
-   height="512"
-   viewBox="0 0 512 512"
-   version="1.1"
-   id="svg1"
-   inkscape:version="1.4.1-rc (832c77b156, 2025-02-28)"
-   sodipodi:docname="POI_Logo.svg"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <sodipodi:namedview
-     id="namedview1"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:document-units="px"
-     inkscape:zoom="1.5683594"
-     inkscape:cx="255.6812"
-     inkscape:cy="153.98257"
-     inkscape:window-width="1920"
-     inkscape:window-height="1011"
-     inkscape:window-x="0"
-     inkscape:window-y="32"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" />
-  <defs
-     id="defs1" />
-  <g
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
-     id="layer1">
-    <!-- Hintergrund -->
-    <rect
-       width="512"
-       height="512"
-       fill="#2980b9"
-       rx="50"
-       ry="50"
-       id="rect1"
-       x="-2.1006372e-08"
-       y="0.18306349" />
-    <!-- \u00dcberarbeiteter Karten-Pin als Marker -->
-    <path
-       d="m 255.36239,81.458281 c -68,0 -120,51.999999 -120,119.999999 0,80 120,180 120,180 0,0 120,-100 120,-180 0,-68 -52,-119.999999 -120,-119.999999 z"
-       fill="#ffffff"
-       id="path1" />
-    <!-- Innerer Kreis als Highlight f\u00fcr den Point of Interest -->
-    <circle
-       cx="255.3624"
-       cy="209.45828"
-       r="48"
-       fill="#f1c40f"
-       id="circle1" />
+  <!-- Hintergrund -->
+  <rect width="512" height="512" rx="108" ry="108" fill="url(#bgGrad)"/>
+
+  <!-- Optional: Glanz-Overlay oben-links -->
+  <ellipse cx="160" cy="140" rx="180" ry="160" fill="white" fill-opacity="0.07"/>
+
+  <!-- Motiv: POI -->
+  <g filter="url(#shadow)">
+    <!-- Map Pin -->
+    <path d="M 256 120 C 180 120 130 170 130 240 C 130 320 256 420 256 420 C 256 420 382 320 382 240 C 382 170 332 120 256 120 Z" fill="none" stroke="#ffffff" stroke-width="28"/>
+    <!-- Star Inside -->
+    <polygon points="256,180 274,225 320,225 282,252 296,298 256,270 216,298 230,252 192,225 238,225" fill="#ffffff"/>
   </g>
 </svg>
