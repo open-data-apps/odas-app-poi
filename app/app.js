@@ -6,22 +6,12 @@
  * @returns {string} - darzustellendes HTML
  */
 
-function app() {
-  document.addEventListener("DOMContentLoaded", () => {
-    // Setzen, dass POIs geladen wurden
-    localStorage.setItem("poisLoaded", "false");
-    loadConfig();
-    // Leert das Textfeld searchInput beim Neuladen
-    const searchInput = document.getElementById("searchInput");
-    if (searchInput) {
-      searchInput.value = "";
-    }
-  });
-  document.getElementById("main-content").innerHTML = `<header class="header">
+function app(configdata, enclosingHtmlDivElement) {
+  enclosingHtmlDivElement.innerHTML = `<header class="header">
         <h1>Points of Interest</h1>
       <div id="map"></div>`;
   initializeMap();
-  poiSidebar.style.display = "block"; // Zeige die Sidebar an
+  document.getElementById("poiSidebar").style.display = "block"; // Zeige die Sidebar an
   // Erstellt ein MediaQueryList-Objekt
   const mediaQuery = window.matchMedia("(max-width: 768px)");
 
@@ -161,6 +151,7 @@ async function initializeMap() {
     document
       .getElementById("sidebartoggle")
       .addEventListener("click", function () {
+        const poiSidebar = document.getElementById("poiSidebar");
         if (poiSidebar.style.visibility === "hidden") {
           poiSidebar.style.visibility = "visible";
         } else {

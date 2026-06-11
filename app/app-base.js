@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const configUrl = getConfigUrl();
   try {
     configData = await fetchConfig(configUrl); // Zuweisung zu globaler Variable
-    document.head.innerHTML += addToHead();
+    addToHead();
     updatePageContent();
     loadPage("startseite");
   } catch (err) {
@@ -95,7 +95,7 @@ async function loadPage(page) {
   const poiSidebar = document.getElementById("poiSidebar");
   switch (page) {
     case "startseite":
-      app();
+      app(configData, mainContent);
       break;
     case "kontakt":
       content = createPageContent("Kontakt", configData.kontakt);
