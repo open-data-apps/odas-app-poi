@@ -5,32 +5,19 @@
  * @param {Object} configdata - Alle Konfigurationsdaten der App
  * @returns {string} - darzustellendes HTML
  */
+let map;
 
 function app(configdata, enclosingHtmlDivElement) {
-  enclosingHtmlDivElement.innerHTML = `<header class="header">
-        <h1>Points of Interest</h1>
-      <div id="map"></div>`;
+  enclosingHtmlDivElement.innerHTML = `
+    <header class="header">
+      <h1>Points of Interest</h1>
+    </header>
+    <div id="map"></div>
+  `;
   initializeMap();
   document.getElementById("poiSidebar").style.display = "block"; // Zeige die Sidebar an
-  // Erstellt ein MediaQueryList-Objekt
-  const mediaQuery = window.matchMedia("(max-width: 768px)");
-
-  // Funktion, die bei Änderungen in der Media Query ausgeführt wird
-  function handleMediaQueryChange(e) {
-    if (e.matches) {
-      // Die Breite ist kleiner oder gleich 768px
-      console.log("Die Ansicht ist kleiner oder gleich 768px breit.");
-      const sidebartoggle = document.getElementById("sidebartoggle");
-      sidebartoggle.style.visibility = "visible";
-    }
-  }
-
-  // Direktes Einmaliges Ausführen der Funktion mit dem aktuellen Status
-  handleMediaQueryChange(mediaQuery);
-
-  // Listener hinzufügen, um auf Änderungen in der Media Query zu reagieren
-  mediaQuery.addListener(handleMediaQueryChange);
 }
+
 /**
  * Extrahiert den Pfad aus einer vollständigen URL.
  * @param {string} url
@@ -44,8 +31,18 @@ function extractPathFromUrl(url) {
     return url;
   }
 }
+
 async function initializeMap() {
-  const map = L.map("map").setView([51.1657, 10.4515], 4);
+  if (typeof map !== 'undefined' && map) {
+    try {
+      map.remove();
+    } catch (e) {
+      console.warn("Fehler beim Entfernen der Leaflet-Karte in initializeMap:", e);
+    }
+    map = null;
+  }
+
+  map = L.map("map").setView([51.1657, 10.4515], 4);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
   }).addTo(map);
@@ -124,42 +121,36 @@ async function initializeMap() {
     map.fitBounds(markerClusterGroup.getBounds(), { maxZoom: 5 });
 
     localStorage.setItem("poisLoaded", "true");
-    //Burger Menu schließ Funktion
-    document.querySelectorAll(".navbar-nav .nav-link").forEach((link) => {
-      link.addEventListener("click", () => {
-        const navbarToggler = document.querySelector(".navbar-toggler");
-        const navbarCollapse = document.querySelector(".navbar-collapse");
-        if (navbarCollapse.classList.contains("show")) {
-          navbarToggler.click(); // Schließt das Menü
-        }
-      });
-    });
 
-    //Sidebar Suchfunktion
-    document
-      .getElementById("searchInput")
-      .addEventListener("keyup", function () {
-        let filter = this.value.toLowerCase();
-        let items = document.querySelectorAll("#poiList .list-group-item");
-
-        items.forEach((item) => {
-          let text = item.textContent.toLowerCase();
-          item.style.display = text.includes(filter) ? "" : "none";
-        });
-      });
-
-    document
-      .getElementById("sidebartoggle")
-      .addEventListener("click", function () {
-        const poiSidebar = document.getElementById("poiSidebar");
-        if (poiSidebar.style.visibility === "hidden") {
-          poiSidebar.style.visibility = "visible";
-        } else {
-          poiSidebar.style.visibility = "hidden";
-        }
-      });
+    setupEventListeners();
   } catch (error) {
     console.error("Fehler beim Laden der Daten:", error);
+  }
+}
+
+function setupEventListeners() {
+  // Search-Listener
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) {
+    searchInput.onkeyup = function () {
+      let filter = this.value.toLowerCase();
+      let items = document.querySelectorAll("#poiList .list-group-item");
+      items.forEach((item) => {
+        let text = item.textContent.toLowerCase();
+        item.style.display = text.includes(filter) ? "" : "none";
+      });
+    };
+  }
+
+  // Sidebar Toggle-Listener
+  const sidebartoggle = document.getElementById("sidebartoggle");
+  if (sidebartoggle) {
+    sidebartoggle.onclick = function () {
+      const poiSidebar = document.getElementById("poiSidebar");
+      if (poiSidebar) {
+        poiSidebar.classList.toggle("show");
+      }
+    };
   }
 }
 
@@ -186,9 +177,9 @@ function formatTextWithLineBreaks(text) {
     );
 }
 
-/* 
- * Diese Funktion kann Bibliotheken und benötigte Skripte laden. 
- * Sie hängt den zurückgegebenen HTML Code in die Head Section an. 
+/*
+ * Diese Funktion kann Bibliotheken und benötigte Skripte laden.
+ * Sie hängt den zurückgegebenen HTML Code in die Head Section an.
 
  * @returns {string} - HTML mit script, link, etc. Tags
  */
