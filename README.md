@@ -8,6 +8,11 @@ Die App ist eine "ODAP App V1".
 
 ## Funktionen
 
+- Interaktive Karte mit POI-Markern und Clustering
+- Seitenleiste mit Suchfunktion
+- Datenfrische-Indikator (CKAN metadata_modified)
+- Weiterführende Links (konfigurierbar)
+
 ## Entwicklung
 
 ### Aufbau der App

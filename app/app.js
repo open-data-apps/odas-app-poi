@@ -7,6 +7,35 @@
  */
 let map;
 
+function escapeHtml(str) {
+  const s = String(str ?? "");
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function renderWeitereInfos(configdata) {
+  const links = (configdata.weiterfuehrendeLinks || "").trim();
+  if (!links) return "";
+  return (
+    '<section class="poi-weitere-infos mt-4">' +
+    '<h2 class="h5 mb-3">Weitere Informationen</h2>' +
+    '<div class="poi-weitere-infos-content">' +
+    links +
+    "</div></section>"
+  );
+}
+
+function extractDatenStand(apiResponse) {
+  const raw = apiResponse?.result?.metadata_modified || null;
+  if (!raw) return null;
+  const d = new Date(raw);
+  return isNaN(d.getTime()) ? null : d.toLocaleDateString("de-DE");
+}
+
 function app(configdata, enclosingHtmlDivElement) {
   enclosingHtmlDivElement.innerHTML = `
     <header class="header">
@@ -14,8 +43,8 @@ function app(configdata, enclosingHtmlDivElement) {
     </header>
     <div id="map"></div>
   `;
-  initializeMap();
-  document.getElementById("poiSidebar").style.display = "block"; // Zeige die Sidebar an
+  initializeMap(configdata);
+  document.getElementById("poiSidebar").style.display = "block";
 }
 
 /**
@@ -32,7 +61,7 @@ function extractPathFromUrl(url) {
   }
 }
 
-async function initializeMap() {
+async function initializeMap(configdata) {
   if (typeof map !== 'undefined' && map) {
     try {
       map.remove();
@@ -63,6 +92,17 @@ async function initializeMap() {
       data = JSON.parse(proxyData.content);
     } catch (e) {
       throw new Error("Fehler beim Parsen der API-Daten");
+    }
+
+    const stand = extractDatenStand(data);
+    if (stand) {
+      const mainContent = document.getElementById("main-content");
+      if (mainContent) {
+        const frischeEl = document.createElement("div");
+        frischeEl.className = "text-muted small text-end mb-2";
+        frischeEl.textContent = "Aktualisiert: " + stand;
+        mainContent.insertBefore(frischeEl, mainContent.firstChild);
+      }
     }
 
     const resources = data.result.resources.filter((resource) =>
@@ -123,6 +163,16 @@ async function initializeMap() {
     localStorage.setItem("poisLoaded", "true");
 
     setupEventListeners();
+
+    const weitereHTML = renderWeitereInfos(configdata);
+    if (weitereHTML) {
+      const mainContent = document.getElementById("main-content");
+      if (mainContent) {
+        const weitereEl = document.createElement("div");
+        weitereEl.innerHTML = weitereHTML;
+        mainContent.appendChild(weitereEl);
+      }
+    }
   } catch (error) {
     console.error("Fehler beim Laden der Daten:", error);
   }

@@ -3,22 +3,34 @@
   "app-entwickler-name": "mueller-gmbh",
   "name-in-url": "pois",
   "name": "POIs",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "odas-app-icon": "assets/odas-app-icon.svg",
   "app-icon": "assets/odas-app-icon.svg",
   "kurzbeschreibung": "Die POI-App zeigt relevante Orte in der Umgebung. Dank Kartenansicht, Suchfunktion und Infos wird die Stadt neu erlebbar.",
   "beschreibung": [
     "_multiline_",
-    "Die Karte zeigt POIs an. Die Daten werden aus einem Open",
-    "Data Portal bezogen und müssen in Form von CSV-Dateien vorliegen.",
-    "Die Daten müssen in einem Open Data Portal",
-    "wie folgt aufgebaut sein: \n",
-    "* Datensatz: mit allen POIs als Ressourcen",
-    "* Ressourcen: Jeder Bereich ist als CSV-Datei anzulegen.",
-    "* In der CSV-Datei befinden sich die POIs für den jeweiligen Bereich",
-    "* Beim Hochladen der Daten in den Datastore muss jede Beschreibung, die Kommas enthält muss in \"\" gesetzt werden",
-    "* Als URL muss ein Link zum Datensatz angegeben werden. Beispiel:",
-    "https://open-data-musterstadt.ckan.de/api/3/action/package_show?id=esslingen_pois"
+    "## Über diese App",
+    "Diese App zeigt Sehenswürdigkeiten und Points of Interest auf einer interaktiven Karte. Sie macht die Stadt für Tourist:innen und Entdecker:innen erlebbar – mit Standorten, Beschreibungen und schneller Navigation.",
+    "",
+    "## Inhalte",
+    "- Interaktive Karte mit POI-Markern und Clustering",
+    "- Seitenleiste mit Suchfunktion für schnelles Auffinden",
+    "- Popup-Infos zu jedem POI mit Link zu Google Maps",
+    "- Mehrere CSV-Datenquellen als Ressourcen eines Datensatzes",
+    "",
+    "## Nutzung",
+    "Vergrößern und verschieben Sie die Karte, um die Umgebung zu erkunden. Die Seitenleiste listet alle POIs auf – klicken Sie einen Eintrag, um direkt zum Marker zu springen. Die Suchfunktion filtert die Liste in Echtzeit.",
+    "",
+    "## Für wen ist diese App?",
+    "Diese App zeigt Sehenswürdigkeiten und Points of Interest auf einer interaktiven Karte. Sie richtet sich an Tourist:innen und Entdecker:innen.",
+    "",
+    "## Datenquelle",
+    "- **Open Data Portal:** <a href=\"{{odp.url}}\" target=\"_blank\">{{odp.name}}</a>",
+    "- **Datensatz:** <a href=\"{{appinstanz.urlDaten}}\" target=\"_blank\">POI-Datensatz im Open Data Portal</a>",
+    "- **Ressourcen:** <a href=\"{{appinstanz.apiurl}}\" target=\"_blank\">package_show API</a>",
+    "",
+    "## Open Data App Store",
+    "Der Open Data App Store wird betrieben von <a href=\"{{odas.betreiber.url}}\">{{odas.betreiber.name}}</a>."
   ],
   "tags-funktion": [
     "Tourismus",
@@ -202,6 +214,32 @@
       "default": "{{appconfig.datensatz-url}}",
       "beispiel": "https://open-data-musterstadt.ckan.de/dataset/esslingen_pois",
       "erforderlich": "ja"
+    },
+    "sprache": {
+      "label": "Sprache der App",
+      "hilfe": "Angabe der App-Sprache",
+      "format": {
+        "typ": "dropdown",
+        "optionen": [
+          "de"
+        ],
+        "default": "de"
+      },
+      "erforderlich": "ja"
+    },
+    "datenStand": {
+      "label": "Datenstand",
+      "hilfe": "Freitext-Datum, z.B. 'Stand: Januar 2025'. Leer = ausgeblendet.",
+      "format": { "typ": "string", "laenge": 60 },
+      "default": "",
+      "erforderlich": "nein"
+    },
+    "weiterfuehrendeLinks": {
+      "label": "Weiterführende Links",
+      "hilfe": "Verwandte Datensätze / Hintergrundquellen (Markdown/HTML). Leer = ausgeblendet.",
+      "format": { "typ": "markdown" },
+      "default": "",
+      "erforderlich": "nein"
     }
   },
   "daten": {
