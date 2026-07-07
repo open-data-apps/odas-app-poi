@@ -37,7 +37,7 @@
     "Stadtinformation"
   ],
   "tags-dateityp": [
-    "csv"
+    "CSV"
   ],
   "tags-datenart": [
     "Geodaten",
@@ -48,7 +48,6 @@
     "assets/Mobile_Screenshot_2.png",
     "assets/Mobile_Screenshot.png"
   ],
-  "apiversion": "1",
   "instanz-config": {
     "seitentitel": {
       "label": "Seitentitel",
