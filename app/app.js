@@ -47,6 +47,10 @@ function app(configdata, enclosingHtmlDivElement) {
   document.getElementById("poiSidebar").style.display = "block";
 }
 
+function isOdasProxyEnabled(configdata = {}) {
+  return String(configdata.proxyAktiv || "").trim().toLowerCase() === "ja";
+}
+
 /**
  * Extrahiert den Pfad aus einer vollständigen URL.
  * @param {string} url
@@ -54,11 +58,76 @@ function app(configdata, enclosingHtmlDivElement) {
  */
 function extractPathFromUrl(url) {
   try {
-    const u = new URL(url);
-    return u.pathname + u.search;
-  } catch (e) {
-    return url;
+    const parsedUrl = new URL(url);
+    return parsedUrl.pathname + parsedUrl.search;
+  } catch (_error) {
+    return String(url || "");
   }
+}
+
+function getOdasAppBasePath(pathname) {
+  let appPath =
+    pathname === undefined
+      ? typeof window !== "undefined"
+        ? window.location.pathname
+        : "/"
+      : String(pathname || "/");
+
+  if (!appPath.endsWith("/")) {
+    const lastSlashIndex = appPath.lastIndexOf("/");
+    const lastSegment = appPath.substring(lastSlashIndex + 1);
+    if (lastSegment.includes(".")) {
+      appPath = appPath.substring(0, lastSlashIndex + 1);
+    }
+  }
+
+  return appPath.replace(/\/+$/, "");
+}
+
+function getOdasProxyEndpoint(targetUrl, pathname) {
+  const appPath = getOdasAppBasePath(pathname);
+  return `${appPath}/odp-data?path=${encodeURIComponent(
+    extractPathFromUrl(targetUrl),
+  )}`;
+}
+
+async function fetchViaOdasProxy(targetUrl) {
+  const response = await fetch(getOdasProxyEndpoint(targetUrl), {
+    method: "POST",
+  });
+
+  if (!response.ok) {
+    throw new Error(`ODAS-Proxy-Fehler: HTTP ${response.status}`);
+  }
+
+  const proxyData = await response.json();
+  if (!proxyData || typeof proxyData.content !== "string") {
+    throw new Error("ODAS-Proxy-Antwort enthält keinen content-String.");
+  }
+
+  return proxyData.content;
+}
+
+async function fetchOdasResource(targetUrl, configdata = {}) {
+  if (isOdasProxyEnabled(configdata)) {
+    return fetchViaOdasProxy(targetUrl);
+  }
+
+  try {
+    const response = await fetch(targetUrl);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    return response.text();
+  } catch (error) {
+    throw new Error(
+      `Direkter Datenabruf fehlgeschlagen (${error.message}). Bitte prüfen Sie die Daten-URL und die CORS-Freigabe der Datenquelle.`,
+    );
+  }
+}
+
+async function fetchOdasJson(targetUrl, configdata = {}) {
+  return JSON.parse(await fetchOdasResource(targetUrl, configdata));
 }
 
 async function initializeMap(configdata) {
@@ -80,18 +149,11 @@ async function initializeMap(configdata) {
   const markerClusterGroup = L.markerClusterGroup(); // Cluster-Gruppe erstellen
 
   try {
-    // Proxy-Endpunkt für package_show
-    const fullPath = window.location.pathname.replace(/\/+$/, "");
-    const proxyEndpoint = `${fullPath}/odp-data?path=${extractPathFromUrl(
-      configData.apiurl
-    )}`;
-    const response = await fetch(proxyEndpoint, { method: "POST" });
-    const proxyData = await response.json();
     let data;
     try {
-      data = JSON.parse(proxyData.content);
+      data = await fetchOdasJson(configdata.apiurl, configdata);
     } catch (e) {
-      throw new Error("Fehler beim Parsen der API-Daten");
+      throw new Error("Fehler beim Laden der API-Daten: " + e.message);
     }
 
     const stand = extractDatenStand(data);
@@ -117,13 +179,7 @@ async function initializeMap(configdata) {
     poiList.innerHTML = "";
 
     for (const resource of resources) {
-      // Proxy-Endpunkt für CSV-Ressource
-      const csvProxyEndpoint = `${fullPath}/odp-data?path=${extractPathFromUrl(
-        resource.url
-      )}`;
-      const csvResponse = await fetch(csvProxyEndpoint, { method: "POST" });
-      const csvProxyData = await csvResponse.json();
-      const csvText = csvProxyData.content;
+      const csvText = await fetchOdasResource(resource.url, configdata);
       const parsedPOIs = parseCSV(csvText);
 
       parsedPOIs.forEach((poi) => {
@@ -134,9 +190,9 @@ async function initializeMap(configdata) {
 
         const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${poi.latitude},${poi.longitude}`;
         const popupContent = `
-          <strong>${poi.name}</strong><br>
-          ${poi.description}<br>
-          <a href="${googleMapsUrl}" target="_blank">In Google Maps ansehen</a>
+          <strong>${escapeHtml(poi.name)}</strong><br>
+          ${escapeHtml(poi.description)}<br>
+          <a href="${escapeHtml(googleMapsUrl)}" target="_blank" rel="noopener">In Google Maps ansehen</a>
         `;
 
         const marker = L.marker([poi.latitude, poi.longitude]).bindPopup(
@@ -175,6 +231,12 @@ async function initializeMap(configdata) {
     }
   } catch (error) {
     console.error("Fehler beim Laden der Daten:", error);
+    const poiList = document.getElementById("poiList");
+    if (poiList) {
+      poiList.innerHTML = `<li class="list-group-item text-danger"><strong>Fehler beim Laden:</strong> ${escapeHtml(
+        error.message
+      )}</li>`;
+    }
   }
 }
 

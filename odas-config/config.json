@@ -1,5 +1,6 @@
 {
   "apiVersion": "1",
+  "proxyAktiv": "nein",
   "titel": "Alle POIs von Esslingen",
   "seitentitel": "Karte Esslingen",
   "icon": "logo_ondics.png",
