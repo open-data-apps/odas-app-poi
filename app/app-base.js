@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           <h4 class="alert-heading">Fehler beim Laden der App</h4>
           <p>Die Konfigurationsdatei der App konnte nicht geladen oder verarbeitet werden.</p>
           <hr>
-          <p class="mb-0">Details: ${err.message}</p>
+          <p class="mb-0">Details: ${escapeHtmlForBase(err.message)}</p>
         </div>
       `;
     }
@@ -143,6 +143,15 @@ function updatePageContent() {
   });
 }
 
+function escapeHtmlForBase(value = "") {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 async function loadPage(page) {
   // Clean up Leaflet map if leaving startseite
   if (page !== "startseite") {
@@ -166,7 +175,7 @@ async function loadPage(page) {
   }
   switch (page) {
     case "startseite":
-      content = app(configData, mainContent);
+      content = await app(configData, mainContent);
       break;
     case "kontakt":
       content = createPageContent("Kontakt", configData.kontakt);
