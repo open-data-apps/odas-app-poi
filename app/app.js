@@ -7,6 +7,33 @@
  */
 let map;
 
+/*
+ * Template-Hook (oda-generic 1.4.0). Die Base ruft ihn vor dem Rendern der neuen Seite
+ * auf. Diese App haelt eine Leaflet-Karte und eine eigene Sidebar ausserhalb von
+ * #main-content; beides muss beim Verlassen der Startseite abgeraeumt bzw. ausgeblendet
+ * werden. Frueher stand diese Logik in app/app-base.js und hat die Datei vom Template
+ * abweichen lassen.
+ */
+function onPageLeave(page) {
+  if (page !== "startseite" && map) {
+    try {
+      map.remove();
+    } catch (e) {
+      console.warn("Fehler beim Entfernen der Leaflet-Karte:", e);
+    }
+    map = null;
+  }
+
+  const poiSidebar = document.getElementById("poiSidebar");
+  const sidebartoggle = document.getElementById("sidebartoggle");
+  if (page === "startseite") {
+    if (sidebartoggle) sidebartoggle.style.visibility = "";
+  } else {
+    if (sidebartoggle) sidebartoggle.style.visibility = "hidden";
+    if (poiSidebar) poiSidebar.style.display = "none";
+  }
+}
+
 function escapeHtml(str) {
   const s = String(str ?? "");
   return s
