@@ -195,7 +195,9 @@ async function initializeMap(configdata) {
     }
 
     const resources = data.result.resources.filter((resource) =>
-      resource.format.toLowerCase().includes("csv")
+      String((resource && resource.format) || "")
+        .toLowerCase()
+        .includes("csv")
     );
 
     if (!resources.length) {
@@ -205,9 +207,11 @@ async function initializeMap(configdata) {
     const poiList = document.getElementById("poiList");
     poiList.innerHTML = "";
 
+    let verworfenGesamt = 0;
     for (const resource of resources) {
       const csvText = await fetchOdasResource(resource.url, configdata);
-      const parsedPOIs = parseCSV(csvText);
+      const { pois: parsedPOIs, verworfen } = parseCSV(csvText);
+      verworfenGesamt += verworfen;
 
       parsedPOIs.forEach((poi) => {
         if (poiNames.has(poi.name)) {
@@ -240,8 +244,26 @@ async function initializeMap(configdata) {
       });
     }
 
+    if (!poiNames.size) {
+      poiList.innerHTML =
+        '<li class="list-group-item"><div class="alert alert-info mb-0" role="alert">Keine Daten gefunden.</div></li>';
+    } else if (verworfenGesamt > 0) {
+      console.warn(
+        `POI: ${verworfenGesamt} Zeile(n) ohne verwertbare Koordinaten übersprungen.`,
+      );
+      const hinweis = document.createElement("li");
+      hinweis.className = "list-group-item";
+      hinweis.innerHTML =
+        '<div class="alert alert-warning mb-0" role="alert">' +
+        escapeHtml(String(verworfenGesamt)) +
+        " Eintrag/Einträge der Datenquelle haben keine verwertbaren Koordinaten und fehlen auf der Karte.</div>";
+      poiList.insertBefore(hinweis, poiList.firstChild);
+    }
+
     map.addLayer(markerClusterGroup); // Cluster zur Karte hinzufügen
-    map.fitBounds(markerClusterGroup.getBounds(), { maxZoom: 5 });
+    if (poiNames.size) {
+      map.fitBounds(markerClusterGroup.getBounds(), { maxZoom: 5 });
+    }
 
     localStorage.setItem("poisLoaded", "true");
 
@@ -293,17 +315,104 @@ function setupEventListeners() {
   }
 }
 
-function parseCSV(csvText) {
-  const rows = csvText.trim().split("\n").slice(1);
-  return rows.map((row) => {
-    const [name, latitude, longitude, description] = row.split(",");
-    return {
-      name,
-      latitude: parseFloat(latitude),
-      longitude: parseFloat(longitude),
-      description,
-    };
+// ── CSV-PARSING ──────────────────────────────────────────────────────────────
+// Kommunale Open-Data-CSVs sind häufig Semikolon-getrennt, enthalten gequotete
+// Felder und CRLF-Zeilenenden. Naives split(",") verschiebt bei einem Komma im
+// Namen oder in der Beschreibung die Koordinatenspalten.
+
+function detectCsvDelimiter(text) {
+  const firstLine = String(text).split(/\r\n|\r|\n/)[0] || "";
+  let best = ",";
+  let bestCount = 0;
+  [";", ",", "\t", "|"].forEach((cand) => {
+    let count = 0;
+    let inQuotes = false;
+    for (let i = 0; i < firstLine.length; i++) {
+      const c = firstLine[i];
+      if (c === '"') inQuotes = !inQuotes;
+      else if (c === cand && !inQuotes) count++;
+    }
+    if (count > bestCount) {
+      bestCount = count;
+      best = cand;
+    }
   });
+  return best;
+}
+
+function parseCsv(text, delimiter) {
+  const sep = delimiter || detectCsvDelimiter(text);
+  const rows = [];
+  let row = [];
+  let field = "";
+  let inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQuotes) {
+      if (c === '"' && text[i + 1] === '"') {
+        field += '"';
+        i++;
+      } else if (c === '"') inQuotes = false;
+      else field += c;
+    } else if (c === '"') inQuotes = true;
+    else if (c === sep) {
+      row.push(field);
+      field = "";
+    } else if (c === "\n" || c === "\r") {
+      if (c === "\r" && text[i + 1] === "\n") i++;
+      row.push(field);
+      field = "";
+      if (row.length > 1 || row[0] !== "") rows.push(row);
+      row = [];
+    } else field += c;
+  }
+  if (field !== "" || row.length) {
+    row.push(field);
+    rows.push(row);
+  }
+  return rows;
+}
+
+// Liefert { pois, verworfen } — Zeilen ohne brauchbare Koordinaten werden
+// gezählt statt stillschweigend verworfen.
+function parseCSV(csvText) {
+  const rows = parseCsv(csvText);
+  if (rows.length < 2) return { pois: [], verworfen: 0 };
+
+  const headers = rows[0].map((h) => h.trim().toLowerCase());
+  const idx = (...namen) => {
+    for (const n of namen) {
+      const i = headers.indexOf(n);
+      if (i !== -1) return i;
+    }
+    return -1;
+  };
+  // Kopfzeile bevorzugen, Spaltenposition als Rückfallebene.
+  const iName = idx("name", "bezeichnung", "titel");
+  const iLat = idx("latitude", "lat", "breitengrad");
+  const iLon = idx("longitude", "lon", "lng", "längengrad", "laengengrad");
+  const iDesc = idx("description", "beschreibung", "info");
+  const spalte = (cols, i, fallback) =>
+    (cols[i !== -1 ? i : fallback] || "").trim();
+
+  const pois = [];
+  let verworfen = 0;
+  rows.slice(1).forEach((cols) => {
+    const name = spalte(cols, iName, 0);
+    const latitude = parseFloat(spalte(cols, iLat, 1).replace(",", "."));
+    const longitude = parseFloat(spalte(cols, iLon, 2).replace(",", "."));
+    if (!name || !Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+      verworfen++;
+      return;
+    }
+    pois.push({
+      name,
+      latitude,
+      longitude,
+      description: spalte(cols, iDesc, 3),
+    });
+  });
+  return { pois, verworfen };
 }
 
 // Funktion zum Ersetzen von "\n" durch Zeilenumbrüche

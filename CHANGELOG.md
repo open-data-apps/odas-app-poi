@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.8.0 - 2026-07-31
+- FIX: CSV-Zerlegung auf den Konventions-Parser umgestellt (F-14) - ein Komma im Namen
+  oder in der Beschreibung verschiebt die Koordinatenspalten nicht mehr
+- FIX: Spaltenzuordnung ueber die Kopfzeile statt ueber die Position
+- FIX: Eintraege ohne verwertbare Koordinaten werden gezaehlt und angezeigt statt
+  stillschweigend verworfen
+- FIX: CKAN-Ressourcen ohne format-Feld loesen keinen TypeError mehr aus
+- ENH: Empty-State "Keine Daten gefunden." ergaenzt
+
 ## 1.7.0 - 2026-07-31
 - CHG: fehlendes Pflicht-Asset assets/branding.css ergaenzt und brandingCSSFile lokal aktiviert
 
