@@ -16,5 +16,5 @@
   "datenStand": "",
   "weiterfuehrendeLinks": "",
   "brandingCSS": "",
-  "brandingCSSFile": ""
+  "brandingCSSFile": "../assets/branding.css"
 }
