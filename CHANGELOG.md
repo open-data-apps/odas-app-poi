@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.9.0 - 2026-07-31
+- FIX: ZIP-Name aus dem Verzeichnis abgeleitet statt hart verdrahtet (F-22)
+- ENH: Fehlendes `check-app`-Target im Makefile ergaenzt (F-22)
+- FIX: Markdown-Reste in `beschreibung` und `impressum` durch HTML ersetzt (F-23) -
+  Ueberschriften und Adressbloecke werden nicht mehr ohne Umbruch aneinandergehaengt
+
 ## 1.8.0 - 2026-07-31
 - FIX: CSV-Zerlegung auf den Konventions-Parser umgestellt (F-14) - ein Komma im Namen
   oder in der Beschreibung verschiebt die Koordinatenspalten nicht mehr
