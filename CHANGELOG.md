@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.16.0 - 2026-08-06
+- FIX: Leaflet MarkerCluster vendored in `app/vendor/` statt von CDN geladen (Vendoring Teil 3) — Standalone-Betrieb laedt die Zusatzbibliotheken nicht mehr extern
+
 ## 1.15.0 - 2026-08-06
 - FIX: Logo in der Navigationsleiste fuehrt wieder zur Startseite zurueck — der Link zeigte auf `#` statt `#startseite` und wurde von `setupSamePageLinks()` verworfen; das blockierende `onclick="event.preventDefault();"` ist entfernt (F-28, Nachtrag)
 
