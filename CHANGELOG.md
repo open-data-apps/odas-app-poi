@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.15.0 - 2026-08-06
+- FIX: Logo in der Navigationsleiste fuehrt wieder zur Startseite zurueck — der Link zeigte auf `#` statt `#startseite` und wurde von `setupSamePageLinks()` verworfen; das blockierende `onclick="event.preventDefault();"` ist entfernt (F-28, Nachtrag)
+
 ## 1.14.0 - 2026-08-06
 - FIX: Base auf Template oda-generic 1.6.0 vereinheitlicht (Hook renderPageOverride)
 
