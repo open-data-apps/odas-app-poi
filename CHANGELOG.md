@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.20.0 - 2026-08-12
+- FIX: Toten Storage-Schreibzugriff (`poisLoaded`) entfernt — bei blockiertem Browserspeicher konnte der Fehlerzweig korrekt geladene Daten als Fehler rendern und die Suche/Sidebar deaktivieren (F-50)
+
 ## 1.19.0 - 2026-08-06
 - FIX: Datenschutzangabe beschreibt den tatsaechlichen Stand nach dem Vendoring (Welle G)
 

@@ -265,8 +265,6 @@ async function initializeMap(configdata) {
       map.fitBounds(markerClusterGroup.getBounds(), { maxZoom: 5 });
     }
 
-    localStorage.setItem("poisLoaded", "true");
-
     setupEventListeners();
 
     const weitereHTML = renderWeitereInfos(configdata);
