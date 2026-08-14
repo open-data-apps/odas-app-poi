@@ -175,6 +175,16 @@ async function initializeMap(configdata) {
   const poiNames = new Set();
   const markerClusterGroup = L.markerClusterGroup(); // Cluster-Gruppe erstellen
 
+  const quelle = String(configdata.apiurl || "").trim();
+  if (!quelle || /^\{\{.*\}\}$/.test(quelle) || /^<.*>$/.test(quelle)) {
+    const poiListEmpty = document.getElementById("poiList");
+    if (poiListEmpty) {
+      poiListEmpty.innerHTML =
+        '<li class="list-group-item"><div class="alert alert-info mb-0" role="alert">Es ist keine Datenquelle konfiguriert.</div></li>';
+    }
+    return;
+  }
+
   try {
     let data;
     try {
