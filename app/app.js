@@ -6,6 +6,14 @@
  * @returns {string} - darzustellendes HTML
  */
 let map;
+// F-70: Dispose-/Token-Guard fuer initializeMap(). Ein alter, noch laufender
+// initializeMap()-Aufruf darf nach einem Re-Init (erneuter Start, Seitenwechsel)
+// weder in die neue map-Referenz noch ins DOM schreiben. mapDisposed faengt den
+// Fall "Startseite verlassen, waehrend ein Ladevorgang laeuft" ab; mapLoadToken
+// faengt den Fall "Startseite erneut initialisiert, waehrend ein alter Ladevorgang
+// noch laeuft" ab (z.B. schnelles zweimaliges Rendern von #startseite).
+let mapDisposed = false;
+let mapLoadToken = 0;
 
 /*
  * Template-Hook (oda-generic 1.4.0). Die Base ruft ihn vor dem Rendern der neuen Seite
@@ -15,6 +23,12 @@ let map;
  * abweichen lassen.
  */
 function onPageLeave(page) {
+  if (page !== "startseite") {
+    // F-70: markiert einen evtl. noch laufenden initializeMap()-Aufruf als verworfen,
+    // damit dessen asynchrone Fortsetzung nach dem Verlassen der Startseite nichts
+    // mehr in DOM oder Karte schreibt.
+    mapDisposed = true;
+  }
   if (page !== "startseite" && map) {
     try {
       map.remove();
@@ -176,6 +190,12 @@ function describeNonJsonPayload(rawContent) {
 }
 
 async function initializeMap(configdata) {
+  // F-70: Dieser Aufruf beginnt einen neuen Ladevorgang – eine evtl. gesetzte
+  // Dispose-Markierung eines Vorgaengers gilt fuer ihn nicht mehr, und ein eigener
+  // Token identifiziert ihn, damit spaetere, noch aeltere Aufrufe erkennbar bleiben.
+  const token = ++mapLoadToken;
+  mapDisposed = false;
+
   if (typeof map !== 'undefined' && map) {
     try {
       map.remove();
@@ -211,6 +231,10 @@ async function initializeMap(configdata) {
       throw new Error("Fehler beim Laden der API-Daten: " + e.message);
     }
 
+    // F-70: nach dem Await pruefen, ob dieser Ladevorgang inzwischen ueberholt
+    // (Re-Init) oder verworfen (Seite verlassen) wurde, bevor DOM/Karte angefasst werden.
+    if (mapDisposed || token !== mapLoadToken) return;
+
     const stand = extractDatenStand(data);
     if (stand) {
       const mainContent = document.getElementById("main-content");
@@ -229,7 +253,12 @@ async function initializeMap(configdata) {
     );
 
     if (!resources.length) {
-      throw new Error("Keine CSV-Dateien gefunden");
+      const poiList = document.getElementById("poiList");
+      if (poiList) {
+        poiList.innerHTML =
+          '<li class="list-group-item"><div class="alert alert-info mb-0" role="alert">Keine CSV-Dateien im Datensatz gefunden.</div></li>';
+      }
+      return;
     }
 
     const poiList = document.getElementById("poiList");
@@ -238,6 +267,10 @@ async function initializeMap(configdata) {
     let verworfenGesamt = 0;
     for (const resource of resources) {
       const csvText = await fetchOdasResource(resource.url, configdata);
+
+      // F-70: erneut nach dem Await pruefen (jede Schleifeniteration awaitet neu).
+      if (mapDisposed || token !== mapLoadToken) return;
+
       const { pois: parsedPOIs, verworfen } = parseCSV(csvText);
       verworfenGesamt += verworfen;
 
@@ -288,6 +321,10 @@ async function initializeMap(configdata) {
       poiList.insertBefore(hinweis, poiList.firstChild);
     }
 
+    // F-70: letzte Absicherung unmittelbar vor der map/markerClusterGroup-Mutation,
+    // die im Audit-Finding als Rennbedingung identifiziert wurde.
+    if (mapDisposed || token !== mapLoadToken) return;
+
     map.addLayer(markerClusterGroup); // Cluster zur Karte hinzufügen
     if (poiNames.size) {
       map.fitBounds(markerClusterGroup.getBounds(), { maxZoom: 5 });
@@ -306,11 +343,16 @@ async function initializeMap(configdata) {
     }
   } catch (error) {
     console.error("Fehler beim Laden der Daten:", error);
+
+    // F-70: eine ueberholte/verworfene Ladung soll keine Fehlermeldung mehr in ein
+    // inzwischen fremdes poiList schreiben.
+    if (mapDisposed || token !== mapLoadToken) return;
+
     const poiList = document.getElementById("poiList");
     if (poiList) {
-      poiList.innerHTML = `<li class="list-group-item text-danger"><strong>Fehler beim Laden:</strong> ${escapeHtml(
+      poiList.innerHTML = `<li class="list-group-item"><div class="alert alert-danger mb-0" role="alert"><strong>Fehler beim Laden der Daten:</strong> ${escapeHtml(
         error.message
-      )}</li>`;
+      )}</div></li>`;
     }
   }
 }

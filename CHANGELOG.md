@@ -1,6 +1,9 @@
 # Changelog
 
 
+## 1.25.0 - 2026-08-20
+- FIX: Dispose-/Token-Guard in `initializeMap()` ergänzt — ein alter, noch laufender Ladevorgang kann nach einem Re-Init (erneutes Rendern der Startseite) oder nach Verlassen der Startseite nicht mehr seine `markerClusterGroup` an die neue Karte hängen oder ins DOM schreiben (F-70)
+
 ## 1.24.0 - 2026-08-17
 - `apiurl.hilfe` verwendete das Wort „Datensatz" für das Feld, das explizit NICHT die Datensatzseite sein soll (plus Tippfehler „Ressoucen"); jetzt mit expliziter Abgrenzung zu `urlDaten` formuliert (F-68)
 
