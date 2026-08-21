@@ -167,6 +167,17 @@ async function fetchOdasResource(targetUrl, configdata = {}) {
   }
 }
 
+/**
+ * Löst eine benannte Datenressource aus configdata.apiurls auf.
+ * Neue apiurls-Form (typ: "array"); das frühere skalare apiurl wird nicht mehr gelesen.
+ * @returns {string} getrimmte URL, oder "" für den Zustand "keine Quelle konfiguriert"
+ */
+function getOdasApiUrl(configdata, name) {
+  const liste = Array.isArray(configdata && configdata.apiurls) ? configdata.apiurls : [];
+  const treffer = liste.find((eintrag) => eintrag && eintrag.name === name);
+  return String((treffer && treffer.url) || "").trim();
+}
+
 async function fetchOdasJson(targetUrl, configdata = {}) {
   const rawContent = await fetchOdasResource(targetUrl, configdata);
   try {
@@ -213,7 +224,7 @@ async function initializeMap(configdata) {
   const poiNames = new Set();
   const markerClusterGroup = L.markerClusterGroup(); // Cluster-Gruppe erstellen
 
-  const quelle = String(configdata.apiurl || "").trim();
+  const quelle = getOdasApiUrl(configdata, "poi");
   if (!quelle || /^\{\{.*\}\}$/.test(quelle) || /^<.*>$/.test(quelle)) {
     const poiListEmpty = document.getElementById("poiList");
     if (poiListEmpty) {
@@ -226,7 +237,7 @@ async function initializeMap(configdata) {
   try {
     let data;
     try {
-      data = await fetchOdasJson(configdata.apiurl, configdata);
+      data = await fetchOdasJson(getOdasApiUrl(configdata, "poi"), configdata);
     } catch (e) {
       throw new Error("Fehler beim Laden der API-Daten: " + e.message);
     }

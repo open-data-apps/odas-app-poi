@@ -3,7 +3,7 @@
   "app-entwickler-name": "ondics-gmbh",
   "name-in-url": "pois",
   "name": "POIs",
-  "version": "1.26.0",
+  "version": "1.27.0",
   "odas-app-icon": "assets/odas-app-icon.svg",
   "app-icon": "assets/odas-app-icon.svg",
   "kurzbeschreibung": "Die POI-App zeigt relevante Orte in der Umgebung. Dank Kartenansicht, Suchfunktion und Infos wird die Stadt neu erlebbar.",
@@ -15,7 +15,7 @@
     "",
     "## Methodik",
     "",
-    "Die App lädt die in `apiurl` konfigurierte CKAN-Quelle (`/api/3/action/package_show`) direkt – im Live-Betrieb optional über den ODAS-Proxy – und wählt daraus alle Ressourcen aus, deren `format` den Wert `CSV` enthält. Jede ausgewählte Ressource wird über ihre Roh-URL direkt bzw. über den Proxy als CSV-Text geladen.",
+    "Die App lädt die in `apiurls.poi` konfigurierte CKAN-Quelle (`/api/3/action/package_show`) direkt – im Live-Betrieb optional über den ODAS-Proxy – und wählt daraus alle Ressourcen aus, deren `format` den Wert `CSV` enthält. Jede ausgewählte Ressource wird über ihre Roh-URL direkt bzw. über den Proxy als CSV-Text geladen.",
     "",
     "Die CSV-Texte werden im Browser mit dem vorhandenen, anführungszeichenbewussten Parser verarbeitet, der die Trennzeichen `;`, `,`, Tab und `|` in der Kopfzeile erkennt und Zeilen korrekt zerlegt. Spalten werden über Alias-Namen und eine positionale Rückfallebene auf `name`, `latitude`, `longitude` und `description` abgebildet – etwa `name`/`bezeichnung`/`titel`, `latitude`/`lat`/`breitengrad`, `longitude`/`lon`/`lng`/`längengrad`/`laengengrad` und `description`/`beschreibung`/`info`; fehlt ein Name oder sind Koordinaten nicht als Zahl parsbar, wird die Zeile verworfen und gezählt.",
     "",
@@ -127,7 +127,7 @@
         "",
         "## Methodik",
         "",
-        "Die App lädt die in `apiurl` konfigurierte CKAN-Quelle (`/api/3/action/package_show`) direkt – im Live-Betrieb optional über den ODAS-Proxy – und wählt daraus alle Ressourcen aus, deren `format` den Wert `CSV` enthält. Jede ausgewählte Ressource wird über ihre Roh-URL direkt bzw. über den Proxy als CSV-Text geladen.",
+        "Die App lädt die in `apiurls.poi` konfigurierte CKAN-Quelle (`/api/3/action/package_show`) direkt – im Live-Betrieb optional über den ODAS-Proxy – und wählt daraus alle Ressourcen aus, deren `format` den Wert `CSV` enthält. Jede ausgewählte Ressource wird über ihre Roh-URL direkt bzw. über den Proxy als CSV-Text geladen.",
         "",
         "Die CSV-Texte werden im Browser mit dem vorhandenen, anführungszeichenbewussten Parser verarbeitet, der die Trennzeichen `;`, `,`, Tab und `|` in der Kopfzeile erkennt und Zeilen korrekt zerlegt. Spalten werden über Alias-Namen und eine positionale Rückfallebene auf `name`, `latitude`, `longitude` und `description` abgebildet – etwa `name`/`bezeichnung`/`titel`, `latitude`/`lat`/`breitengrad`, `longitude`/`lon`/`lng`/`längengrad`/`laengengrad` und `description`/`beschreibung`/`info`; fehlt ein Name oder sind Koordinaten nicht als Zahl parsbar, wird die Zeile verworfen und gezählt.",
         "",
@@ -237,17 +237,24 @@
       },
       "erforderlich": "ja"
     },
-    "apiurl": {
-      "label": "URL zu den Daten",
+    "apiurls": {
+      "label": "URLs zu Datenressourcen",
       "category": "datenherkunft",
-      "hilfe": "Direkter, maschinenlesbarer Endpunkt, von dem die App die Ressourcen lädt — nicht die Datensatzseite im ODP (siehe „URL zum Datensatz im ODP\").",
+      "hilfe": "Direkter Download-, Datei- oder API-Endpunkt der tatsächlich verwendeten Datenquelle(n). Mehrere Einträge möglich.",
+      "typ": "array",
       "format": {
         "typ": "url",
-        "laenge": 255
+        "laenge": 500
       },
-      "default": "{{appconfig.datensatz-apiurl}}",
-      "beispiel": "https://open-data-musterstadt.ckan.de/api/3/action/package_show?id=esslingen_pois",
-      "erforderlich": "ja"
+      "urls": [
+        {
+          "name": "poi",
+          "label": "URL zu den Daten",
+          "default": "{{appconfig.datensatz-apiurl}}",
+          "beispiel": "https://open-data-musterstadt.ckan.de/api/3/action/package_show?id=esslingen_pois",
+          "erforderlich": "ja"
+        }
+      ]
     },
     "urlDaten": {
       "label": "URL zum Datensatz im ODP",
