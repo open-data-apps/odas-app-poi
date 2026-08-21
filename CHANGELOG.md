@@ -1,5 +1,7 @@
 # Changelog
 
+## 1.26.0 - 2026-08-20
+- Markdown-Metadaten: Paketbeschreibungen auf echtes Markdown umgestellt, exakte Identität Top-Level/Instanz hergestellt, lokale HTML-Fixture semantisch gespiegelt.
 
 ## 1.25.0 - 2026-08-20
 - FIX: Dispose-/Token-Guard in `initializeMap()` ergänzt — ein alter, noch laufender Ladevorgang kann nach einem Re-Init (erneutes Rendern der Startseite) oder nach Verlassen der Startseite nicht mehr seine `markerClusterGroup` an die neue Karte hängen oder ins DOM schreiben (F-70)
