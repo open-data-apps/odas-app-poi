@@ -252,7 +252,7 @@
         {
           "name": "poi",
           "label": "URL zu den Daten",
-          "default": "{{appconfig.datensatz-apiurl}}",
+          "default": "https://open-data-musterstadt.ckan.de/api/3/action/package_show?id=esslingen_pois",
           "beispiel": "https://open-data-musterstadt.ckan.de/api/3/action/package_show?id=esslingen_pois",
           "erforderlich": "ja"
         }
@@ -265,7 +265,7 @@
       "format": {
         "typ": "url"
       },
-      "default": "{{appconfig.datensatz-url}}",
+      "default": "https://open-data-musterstadt.ckan.de/dataset/esslingen_pois",
       "beispiel": "https://open-data-musterstadt.ckan.de/dataset/esslingen_pois",
       "erforderlich": "ja"
     },
