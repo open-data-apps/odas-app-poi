@@ -1,127 +1,14 @@
 {
-  "app-entwickler-id": "12343",
-  "app-entwickler-name": "ondics-gmbh",
-  "name-in-url": "pois",
-  "name": "POIs",
-  "app-version": "1.31.0",
-  "app-package-version": "2",
-  "odas-app-icon": "assets/odas-app-icon.svg",
-  "app-icon": "assets/odas-app-icon.svg",
-  "kurzbeschreibung": "Die POI-App zeigt relevante Orte in der Umgebung. Dank Kartenansicht, Suchfunktion und Infos wird die Stadt neu erlebbar.",
-  "beschreibung": [
-    "_multiline_",
-    "Diese App zeigt Sehenswürdigkeiten und Points of Interest auf einer interaktiven Karte. Sie macht die Stadt für Tourist:innen und Entdecker:innen erlebbar – mit Standorten, Beschreibungen und schneller Navigation.",
-    "",
-    "Sie nutzt offene CSV-Ressourcen aus dem Open-Data-Portal der Stadt und bereitet sie mit Karte, Markern und einer durchsuchbaren Seitenleiste auf. Für wen ist diese App? Sie richtet sich an Tourist:innen, Bürger:innen und alle, die Orte in der Umgebung entdecken möchten – besondere Datenkenntnisse sind nicht erforderlich.",
-    "",
-    "## Methodik",
-    "",
-    "Die App lädt die in `apiurls.poi` konfigurierte CKAN-Quelle (`/api/3/action/package_show`) direkt – im Live-Betrieb optional über den ODAS-Proxy – und wählt daraus alle Ressourcen aus, deren `format` den Wert `CSV` enthält. Jede ausgewählte Ressource wird über ihre Roh-URL direkt bzw. über den Proxy als CSV-Text geladen.",
-    "",
-    "Die CSV-Texte werden im Browser mit dem vorhandenen, anführungszeichenbewussten Parser verarbeitet, der die Trennzeichen `;`, `,`, Tab und `|` in der Kopfzeile erkennt und Zeilen korrekt zerlegt. Spalten werden über Alias-Namen und eine positionale Rückfallebene auf `name`, `latitude`, `longitude` und `description` abgebildet – etwa `name`/`bezeichnung`/`titel`, `latitude`/`lat`/`breitengrad`, `longitude`/`lon`/`lng`/`längengrad`/`laengengrad` und `description`/`beschreibung`/`info`; fehlt ein Name oder sind Koordinaten nicht als Zahl parsbar, wird die Zeile verworfen und gezählt.",
-    "",
-    "Einträge werden über alle Ressourcen hinweg nach exaktem Namen dedupliziert und in einer flachen Liste in Quellreihenfolge ohne Ressourcengruppen in der Seitenleiste angezeigt. Ein clientseitiger Textfilter durchsucht die Liste in Echtzeit.",
-    "",
-    "Die Karte nutzt Leaflet mit OpenStreetMap-Kacheln (`tile.openstreetmap.org`) und `L.markerClusterGroup` für das Clustering. Marker zeigen ein Popup mit Name und Beschreibung sowie einen Klick-Link zu Google Maps (`https://www.google.com/maps/search/?api=1&query=lat,lon`), der erst bei Klick in einem neuen Tab geöffnet wird.",
-    "",
-    "Welche Ressourcen und wie viele POIs tatsächlich vorhanden sind und wie umfassend die Attribute belegt sind, hängt vom jeweiligen CSV-Bestand ab; angezeigt werden die in den Quellen vorhandenen POIs.",
-    "",
-    "## Datenquelle",
-    "",
-    "Die POI-Daten werden als CSV-Ressourcen eines CKAN-Datensatzes über das Open-Data-Portal bereitgestellt; die konkrete Quelle wird über die App-Konfiguration festgelegt.",
-    "",
-    "- **Open Data Portal:** [Open Data Musterstadt](https://open-data-musterstadt.ckan.de)",
-    "- **Datensatz:** [POIs Esslingen]({{{appinstanz.urlDaten}}})",
-    "- **Ressource/API-Endpunkt:** [CKAN package_show](https://open-data-musterstadt.ckan.de/api/3/action/package_show?id=esslingen_pois) – liefert die Liste der CSV-Ressourcen, die anschließend als Roh-CSV geladen werden",
-    "",
-    "Angezeigt werden die in den Quellen vorhandenen POIs; Verfügbarkeit und Stand hängen vom Pflegestand der Quellen ab.",
-    "",
-    "## Open Data App",
-    "",
-    "Diese App ist eine Open Data App und kann im [Open Data App Store](https://open-data-app-store.de/) betrieben werden. Sie ist Open Source und lässt sich mit kommunalen POI-Datensätzen konfigurieren.",
-    "",
-    "- [Open Data App Store](https://open-data-app-store.de/) – die Plattform für Open Data Apps",
-    "- [Alle Open Data Apps auf GitHub](https://github.com/open-data-apps) – die Organisation mit allen Apps",
-    "- [odas-app-poi](https://github.com/open-data-apps/odas-app-poi) – das Repository dieser App"
-  ],
-  "tags-funktion": [
-    "Tourismus",
-    "Stadtinformation"
-  ],
-  "tags-dateityp": [
-    "CSV"
-  ],
-  "tags-datenart": [
-    "Geodaten",
-    "Sehenswürdigkeiten"
-  ],
-  "screenshots": [
-    "assets/Desktop_Screenshot.png",
-    "assets/Mobile_Screenshot_2.png",
-    "assets/Mobile_Screenshot.png"
-  ],
-  "api-version": "1",
-  "instanz-config": {
-    "seitentitel": {
-      "label": "Seitentitel",
-      "category": "allgemein",
-      "hilfe": "Der Seitentitel wird im Browser-Tab der App angezeigt",
-      "default": "POIs",
-      "format": {
-        "typ": "string",
-        "laenge": 50
-      },
-      "erforderlich": "ja"
-    },
-    "titel": {
-      "label": "Titel",
-      "category": "allgemein",
-      "hilfe": "Der Titel wird in der Titelzeile der App angezeigt",
-      "default": "POIs",
-      "format": {
-        "typ": "string",
-        "laenge": 50
-      },
-      "erforderlich": "ja"
-    },
-    "icon": {
-      "label": "App-Icon",
-      "category": "allgemein",
-      "hilfe": "Das Icon wird links oben in der Titelzeile angezeigt",
-      "default": "{{{odp.logo}}}",
-      "format": {
-        "typ": "image",
-        "hoehe": 64,
-        "breite": 189
-      },
-      "erforderlich": "ja"
-    },
-    "kontakt": {
-      "label": "Kontakt",
-      "category": "kontakt-rechtliches",
-      "hilfe": "Der Text wird im Menüpunkt 'Kontakt' anzeigt",
-      "format": {
-        "typ": "markdown"
-      },
-      "default": [
-        "_multiline_",
-        "Sie sind zufrieden mit der App oder haben Anregungen, Verbesserungen oder Hinweise, die Sie uns mitteilen möchten?",
-        "",
-        "Dann richten Sie sich gerne an uns. Wir freuen uns über alle Nachrichten. Ihre Nachrichten können Sie uns mitteilen über:",
-        "",
-        "- Tel.: [{{odp.anbieter.tel}}](tel:{{odp.anbieter.tel}})",
-        "- E-Mail: [{{odp.anbieter.email}}](mailto:{{odp.anbieter.email}})"
-      ],
-      "erforderlich": "ja"
-    },
-    "beschreibung": {
-      "label": "Beschreibung",
-      "category": "beschreibung",
-      "hilfe": "Der Text wird im Menüpunkt 'Über diese App' anzeigt",
-      "format": {
-        "typ": "markdown"
-      },
-      "default": [
+    "app-entwickler-id": "12343",
+    "app-entwickler-name": "ondics-gmbh",
+    "name-in-url": "pois",
+    "name": "POIs",
+    "app-version": "1.31.0",
+    "app-package-version": "2",
+    "odas-app-icon": "assets/odas-app-icon.svg",
+    "app-icon": "assets/odas-app-icon.svg",
+    "kurzbeschreibung": "Die POI-App zeigt relevante Orte in der Umgebung. Dank Kartenansicht, Suchfunktion und Infos wird die Stadt neu erlebbar.",
+    "beschreibung": [
         "_multiline_",
         "Diese App zeigt Sehenswürdigkeiten und Points of Interest auf einer interaktiven Karte. Sie macht die Stadt für Tourist:innen und Entdecker:innen erlebbar – mit Standorten, Beschreibungen und schneller Navigation.",
         "",
@@ -145,7 +32,7 @@
         "",
         "- **Open Data Portal:** [Open Data Musterstadt](https://open-data-musterstadt.ckan.de)",
         "- **Datensatz:** [POIs Esslingen]({{{appinstanz.urlDaten}}})",
-        "- **Ressource/API-Endpunkt:** [CKAN package_show](https://open-data-musterstadt.ckan.de/api/3/action/package_show?id=esslingen_pois) – liefert die Liste der CSV-Ressourcen, die anschließend als Roh-CSV geladen werden",
+        "- **Ressource/API-Endpunkt:** [CKAN package_show]({{{appinstanz.apiurls.1}}}) – liefert die Liste der CSV-Ressourcen, die anschließend als Roh-CSV geladen werden",
         "",
         "Angezeigt werden die in den Quellen vorhandenen POIs; Verfügbarkeit und Stand hängen vom Pflegestand der Quellen ab.",
         "",
@@ -156,181 +43,294 @@
         "- [Open Data App Store](https://open-data-app-store.de/) – die Plattform für Open Data Apps",
         "- [Alle Open Data Apps auf GitHub](https://github.com/open-data-apps) – die Organisation mit allen Apps",
         "- [odas-app-poi](https://github.com/open-data-apps/odas-app-poi) – das Repository dieser App"
-      ],
-      "erforderlich": "ja"
-    },
-    "impressum": {
-      "label": "Impressum",
-      "category": "kontakt-rechtliches",
-      "hilfe": "Der Text wird im Menüpunkt 'Impressum' anzeigt",
-      "format": {
-        "typ": "markdown"
-      },
-      "default": [
-        "_multiline_",
-        "## Anbieter",
-        "",
-        "{{{odp.anbieter.orgName}}}  ",
-        "{{{odp.anbieter.orgUnit}}}",
-        "",
-        "{{odp.anbieter.strasse}}  ",
-        "{{odp.anbieter.plzort}}",
-        "",
-        "Website: [{{odp.anbieter.url}}]({{odp.anbieter.url}})",
-        "",
-        "## Ansprechpartner",
-        "",
-        "{{odp.anbieter.kontakt-bezeichnung}}  ",
-        "{{odp.anbieter.name}}",
-        "",
-        "## Kontakt",
-        "",
-        "Tel.: {{odp.anbieter.tel}}  ",
-        "E-Mail: [{{odp.anbieter.email}}](mailto:{{odp.anbieter.email}})"
-      ],
-      "erforderlich": "ja"
-    },
-    "datenschutz": {
-      "label": "Datenschutz",
-      "category": "kontakt-rechtliches",
-      "hilfe": "Der Text wird im Menüpunkt 'Datenschutz' anzeigt",
-      "format": {
-        "typ": "markdown"
-      },
-      "default": [
-        "_multiline_",
-        "Diese App verarbeitet die angezeigten offenen Daten im Browser. Die App setzt keine Cookies und erhebt keine Nutzungsstatistiken.",
-        "",
-        "Alle für die Darstellung benötigten Programmbibliotheken werden mit der App ausgeliefert. Beim Aufruf werden dafür keine externen Server kontaktiert.",
-        "",
-        "Die angezeigten Daten werden vom Browser direkt aus der konfigurierten Datenquelle geladen. Dabei werden technisch bedingt IP-Adresse und Browserkennung an deren Betreiber übermittelt. Maßgeblich ist der Schalter `proxyAktiv` der Instanz-Konfiguration.",
-        "",
-        "## Beim Aufruf kontaktierte Drittanbieter",
-        "",
-        "Folgende externe Server werden kontaktiert. Dabei werden IP-Adresse und User-Agent der Besucher:innen an diese Anbieter übertragen:",
-        "",
-        "- **tile.openstreetmap.org** — Kartenkacheln (OpenStreetMap)",
-        "- **google.com/maps** — externer Routen-/Kartenlink (öffnet erst bei Klick in einem neuen Tab)"
-      ],
-      "erforderlich": "ja"
-    },
-    "fusszeile": {
-      "label": "Fußzeile",
-      "category": "kontakt-rechtliches",
-      "hilfe": "Wird auf der Website unten in der Fusszeile angezeigt.",
-      "format": {
-        "typ": "string",
-        "laenge": 50
-      },
-      "default": "(C) Copyright {{jahr}} | App & Daten: {{odp.anbieter.name}} | App-Entwickler: {{app.developer.name}} | ODAS: {{odas.betreiber.name}}",
-      "erforderlich": "ja"
-    },
-    "proxyAktiv": {
-      "label": "ODAS-Proxy aktivieren",
-      "category": "datenherkunft",
-      "hilfe": "Mit ja werden Datenabrufe über den ODAS-Proxy gesendet. Der Proxy ist nur im ODAS-Live-System verfügbar; Entwicklung und Standalone verwenden nein.",
-      "default": "nein",
-      "format": {
-        "typ": "dropdown",
-        "optionen": [
-          "nein",
-          "ja"
-        ]
-      },
-      "erforderlich": "ja"
-    },
-    "apiurls": {
-      "label": "URLs zu Datenressourcen",
-      "category": "datenherkunft",
-      "hilfe": "Direkter Download-, Datei- oder API-Endpunkt der tatsächlich verwendeten Datenquelle(n). Mehrere Einträge möglich.",
-      "typ": "array",
-      "format": {
-        "typ": "url",
-        "laenge": 500
-      },
-      "urls": [
-        {
-          "name": "poi",
-          "label": "URL zu den Daten",
-          "default": "https://open-data-musterstadt.ckan.de/api/3/action/package_show?id=esslingen_pois",
-          "beispiel": "https://open-data-musterstadt.ckan.de/api/3/action/package_show?id=esslingen_pois",
-          "erforderlich": "ja"
+    ],
+    "tags-funktion": [
+        "Tourismus",
+        "Stadtinformation"
+    ],
+    "tags-dateityp": [
+        "CSV"
+    ],
+    "tags-datenart": [
+        "Geodaten",
+        "Sehenswürdigkeiten"
+    ],
+    "screenshots": [
+        "assets/Desktop_Screenshot.png",
+        "assets/Mobile_Screenshot_2.png",
+        "assets/Mobile_Screenshot.png"
+    ],
+    "api-version": "1",
+    "instanz-config": {
+        "seitentitel": {
+            "label": "Seitentitel",
+            "category": "allgemein",
+            "hilfe": "Der Seitentitel wird im Browser-Tab der App angezeigt",
+            "default": "POIs",
+            "format": {
+                "typ": "string",
+                "laenge": 50
+            },
+            "erforderlich": "ja"
+        },
+        "titel": {
+            "label": "Titel",
+            "category": "allgemein",
+            "hilfe": "Der Titel wird in der Titelzeile der App angezeigt",
+            "default": "POIs",
+            "format": {
+                "typ": "string",
+                "laenge": 50
+            },
+            "erforderlich": "ja"
+        },
+        "icon": {
+            "label": "App-Icon",
+            "category": "allgemein",
+            "hilfe": "Das Icon wird links oben in der Titelzeile angezeigt",
+            "default": "{{{odp.logo}}}",
+            "format": {
+                "typ": "image",
+                "hoehe": 64,
+                "breite": 189
+            },
+            "erforderlich": "ja"
+        },
+        "kontakt": {
+            "label": "Kontakt",
+            "category": "kontakt-rechtliches",
+            "hilfe": "Der Text wird im Menüpunkt 'Kontakt' anzeigt",
+            "format": {
+                "typ": "markdown"
+            },
+            "default": [
+                "_multiline_",
+                "Sie sind zufrieden mit der App oder haben Anregungen, Verbesserungen oder Hinweise, die Sie uns mitteilen möchten?",
+                "",
+                "Dann richten Sie sich gerne an uns. Wir freuen uns über alle Nachrichten. Ihre Nachrichten können Sie uns mitteilen über:",
+                "",
+                "- Tel.: [{{odp.anbieter.tel}}](tel:{{odp.anbieter.tel}})",
+                "- E-Mail: [{{odp.anbieter.email}}](mailto:{{odp.anbieter.email}})"
+            ],
+            "erforderlich": "ja"
+        },
+        "beschreibung": {
+            "label": "Beschreibung",
+            "category": "beschreibung",
+            "hilfe": "Der Text wird im Menüpunkt 'Über diese App' anzeigt",
+            "format": {
+                "typ": "markdown"
+            },
+            "default": [
+                "_multiline_",
+                "Diese App zeigt Sehenswürdigkeiten und Points of Interest auf einer interaktiven Karte. Sie macht die Stadt für Tourist:innen und Entdecker:innen erlebbar – mit Standorten, Beschreibungen und schneller Navigation.",
+                "",
+                "Sie nutzt offene CSV-Ressourcen aus dem Open-Data-Portal der Stadt und bereitet sie mit Karte, Markern und einer durchsuchbaren Seitenleiste auf. Für wen ist diese App? Sie richtet sich an Tourist:innen, Bürger:innen und alle, die Orte in der Umgebung entdecken möchten – besondere Datenkenntnisse sind nicht erforderlich.",
+                "",
+                "## Methodik",
+                "",
+                "Die App lädt die in `apiurls.poi` konfigurierte CKAN-Quelle (`/api/3/action/package_show`) direkt – im Live-Betrieb optional über den ODAS-Proxy – und wählt daraus alle Ressourcen aus, deren `format` den Wert `CSV` enthält. Jede ausgewählte Ressource wird über ihre Roh-URL direkt bzw. über den Proxy als CSV-Text geladen.",
+                "",
+                "Die CSV-Texte werden im Browser mit dem vorhandenen, anführungszeichenbewussten Parser verarbeitet, der die Trennzeichen `;`, `,`, Tab und `|` in der Kopfzeile erkennt und Zeilen korrekt zerlegt. Spalten werden über Alias-Namen und eine positionale Rückfallebene auf `name`, `latitude`, `longitude` und `description` abgebildet – etwa `name`/`bezeichnung`/`titel`, `latitude`/`lat`/`breitengrad`, `longitude`/`lon`/`lng`/`längengrad`/`laengengrad` und `description`/`beschreibung`/`info`; fehlt ein Name oder sind Koordinaten nicht als Zahl parsbar, wird die Zeile verworfen und gezählt.",
+                "",
+                "Einträge werden über alle Ressourcen hinweg nach exaktem Namen dedupliziert und in einer flachen Liste in Quellreihenfolge ohne Ressourcengruppen in der Seitenleiste angezeigt. Ein clientseitiger Textfilter durchsucht die Liste in Echtzeit.",
+                "",
+                "Die Karte nutzt Leaflet mit OpenStreetMap-Kacheln (`tile.openstreetmap.org`) und `L.markerClusterGroup` für das Clustering. Marker zeigen ein Popup mit Name und Beschreibung sowie einen Klick-Link zu Google Maps (`https://www.google.com/maps/search/?api=1&query=lat,lon`), der erst bei Klick in einem neuen Tab geöffnet wird.",
+                "",
+                "Welche Ressourcen und wie viele POIs tatsächlich vorhanden sind und wie umfassend die Attribute belegt sind, hängt vom jeweiligen CSV-Bestand ab; angezeigt werden die in den Quellen vorhandenen POIs.",
+                "",
+                "## Datenquelle",
+                "",
+                "Die POI-Daten werden als CSV-Ressourcen eines CKAN-Datensatzes über das Open-Data-Portal bereitgestellt; die konkrete Quelle wird über die App-Konfiguration festgelegt.",
+                "",
+                "- **Open Data Portal:** [Open Data Musterstadt](https://open-data-musterstadt.ckan.de)",
+                "- **Datensatz:** [POIs Esslingen]({{{appinstanz.urlDaten}}})",
+                "- **Ressource/API-Endpunkt:** [CKAN package_show]({{{appinstanz.apiurls.1}}}) – liefert die Liste der CSV-Ressourcen, die anschließend als Roh-CSV geladen werden",
+                "",
+                "Angezeigt werden die in den Quellen vorhandenen POIs; Verfügbarkeit und Stand hängen vom Pflegestand der Quellen ab.",
+                "",
+                "## Open Data App",
+                "",
+                "Diese App ist eine Open Data App und kann im [Open Data App Store](https://open-data-app-store.de/) betrieben werden. Sie ist Open Source und lässt sich mit kommunalen POI-Datensätzen konfigurieren.",
+                "",
+                "- [Open Data App Store](https://open-data-app-store.de/) – die Plattform für Open Data Apps",
+                "- [Alle Open Data Apps auf GitHub](https://github.com/open-data-apps) – die Organisation mit allen Apps",
+                "- [odas-app-poi](https://github.com/open-data-apps/odas-app-poi) – das Repository dieser App"
+            ],
+            "erforderlich": "ja"
+        },
+        "impressum": {
+            "label": "Impressum",
+            "category": "kontakt-rechtliches",
+            "hilfe": "Der Text wird im Menüpunkt 'Impressum' anzeigt",
+            "format": {
+                "typ": "markdown"
+            },
+            "default": [
+                "_multiline_",
+                "## Anbieter",
+                "",
+                "{{{odp.anbieter.orgName}}}  ",
+                "{{{odp.anbieter.orgUnit}}}",
+                "",
+                "{{odp.anbieter.strasse}}  ",
+                "{{odp.anbieter.plzort}}",
+                "",
+                "Website: [{{odp.anbieter.url}}]({{odp.anbieter.url}})",
+                "",
+                "## Ansprechpartner",
+                "",
+                "{{odp.anbieter.kontakt-bezeichnung}}  ",
+                "{{odp.anbieter.name}}",
+                "",
+                "## Kontakt",
+                "",
+                "Tel.: {{odp.anbieter.tel}}  ",
+                "E-Mail: [{{odp.anbieter.email}}](mailto:{{odp.anbieter.email}})"
+            ],
+            "erforderlich": "ja"
+        },
+        "datenschutz": {
+            "label": "Datenschutz",
+            "category": "kontakt-rechtliches",
+            "hilfe": "Der Text wird im Menüpunkt 'Datenschutz' anzeigt",
+            "format": {
+                "typ": "markdown"
+            },
+            "default": [
+                "_multiline_",
+                "Diese App verarbeitet die angezeigten offenen Daten im Browser. Die App setzt keine Cookies und erhebt keine Nutzungsstatistiken.",
+                "",
+                "Alle für die Darstellung benötigten Programmbibliotheken werden mit der App ausgeliefert. Beim Aufruf werden dafür keine externen Server kontaktiert.",
+                "",
+                "Die angezeigten Daten werden vom Browser direkt aus der konfigurierten Datenquelle geladen. Dabei werden technisch bedingt IP-Adresse und Browserkennung an deren Betreiber übermittelt. Maßgeblich ist der Schalter `proxyAktiv` der Instanz-Konfiguration.",
+                "",
+                "## Beim Aufruf kontaktierte Drittanbieter",
+                "",
+                "Folgende externe Server werden kontaktiert. Dabei werden IP-Adresse und User-Agent der Besucher:innen an diese Anbieter übertragen:",
+                "",
+                "- **tile.openstreetmap.org** — Kartenkacheln (OpenStreetMap)",
+                "- **google.com/maps** — externer Routen-/Kartenlink (öffnet erst bei Klick in einem neuen Tab)"
+            ],
+            "erforderlich": "ja"
+        },
+        "fusszeile": {
+            "label": "Fußzeile",
+            "category": "kontakt-rechtliches",
+            "hilfe": "Wird auf der Website unten in der Fusszeile angezeigt.",
+            "format": {
+                "typ": "string",
+                "laenge": 50
+            },
+            "default": "(C) Copyright {{jahr}} | App & Daten: {{odp.anbieter.name}} | App-Entwickler: {{app.developer.name}} | ODAS: {{odas.betreiber.name}}",
+            "erforderlich": "ja"
+        },
+        "proxyAktiv": {
+            "label": "ODAS-Proxy aktivieren",
+            "category": "datenherkunft",
+            "hilfe": "Mit ja werden Datenabrufe über den ODAS-Proxy gesendet. Der Proxy ist nur im ODAS-Live-System verfügbar; Entwicklung und Standalone verwenden nein.",
+            "default": "nein",
+            "format": {
+                "typ": "dropdown",
+                "optionen": [
+                    "nein",
+                    "ja"
+                ]
+            },
+            "erforderlich": "ja"
+        },
+        "apiurls": {
+            "label": "URLs zu Datenressourcen",
+            "category": "datenherkunft",
+            "hilfe": "Direkter Download-, Datei- oder API-Endpunkt der tatsächlich verwendeten Datenquelle(n). Mehrere Einträge möglich.",
+            "typ": "array",
+            "format": {
+                "typ": "url",
+                "laenge": 500
+            },
+            "urls": [
+                {
+                    "name": "poi",
+                    "label": "URL zu den Daten",
+                    "default": "https://open-data-musterstadt.ckan.de/api/3/action/package_show?id=esslingen_pois",
+                    "beispiel": "https://open-data-musterstadt.ckan.de/api/3/action/package_show?id=esslingen_pois",
+                    "erforderlich": "ja"
+                }
+            ]
+        },
+        "urlDaten": {
+            "label": "URL zum Datensatz im ODP",
+            "category": "datenherkunft",
+            "hilfe": "Der Datensatz im Open Data Portal mit den CSV-Einzeldateien der POIs",
+            "format": {
+                "typ": "url"
+            },
+            "default": "https://open-data-musterstadt.ckan.de/dataset/esslingen_pois",
+            "beispiel": "https://open-data-musterstadt.ckan.de/dataset/esslingen_pois",
+            "erforderlich": "ja"
+        },
+        "sprache": {
+            "label": "Sprache der App",
+            "category": "allgemein",
+            "hilfe": "Angabe der App-Sprache",
+            "default": "de",
+            "format": {
+                "typ": "dropdown",
+                "optionen": [
+                    "de"
+                ]
+            },
+            "erforderlich": "ja"
+        },
+        "datenStand": {
+            "label": "Datenstand",
+            "category": "beschreibung",
+            "hilfe": "Freitext-Datum, z.B. 'Stand: Januar 2025'. Leer = ausgeblendet.",
+            "format": {
+                "typ": "string",
+                "laenge": 60
+            },
+            "default": "",
+            "erforderlich": "nein"
+        },
+        "weiterfuehrendeLinks": {
+            "label": "Weiterführende Links",
+            "category": "beschreibung",
+            "hilfe": "Verwandte Datensätze / Hintergrundquellen (Markdown/HTML). Leer = ausgeblendet.",
+            "format": {
+                "typ": "markdown"
+            },
+            "default": "",
+            "erforderlich": "nein"
+        },
+        "brandingCSS": {
+            "label": "Zusätzliches Branding-CSS",
+            "category": "sonstiges",
+            "hilfe": "Optionaler CSS-Code für die konkrete App-Instanz.",
+            "default": "",
+            "format": {
+                "typ": "string",
+                "laenge": 10000
+            },
+            "erforderlich": "nein"
+        },
+        "brandingCSSFile": {
+            "label": "Branding-CSS-Datei",
+            "category": "sonstiges",
+            "hilfe": "Optionale URL zu einer zusätzlichen CSS-Datei für die konkrete App-Instanz.",
+            "default": "",
+            "format": {
+                "typ": "url",
+                "laenge": 500
+            },
+            "erforderlich": "nein"
         }
-      ]
     },
-    "urlDaten": {
-      "label": "URL zum Datensatz im ODP",
-      "category": "datenherkunft",
-      "hilfe": "Der Datensatz im Open Data Portal mit den CSV-Einzeldateien der POIs",
-      "format": {
-        "typ": "url"
-      },
-      "default": "https://open-data-musterstadt.ckan.de/dataset/esslingen_pois",
-      "beispiel": "https://open-data-musterstadt.ckan.de/dataset/esslingen_pois",
-      "erforderlich": "ja"
+    "daten": {
+        "beschreibung": "Die POIs-App verarbeitet konfigurierbare Open-Data-Ressourcen aus dem Open Data Portal (z.B. JSON- oder CSV-Endpunkte).",
+        "schema": "assets/schema.json",
+        "beispiel": "",
+        "beispiel-url": ""
     },
-    "sprache": {
-      "label": "Sprache der App",
-      "category": "allgemein",
-      "hilfe": "Angabe der App-Sprache",
-      "default": "de",
-      "format": {
-        "typ": "dropdown",
-        "optionen": [
-          "de"
-        ]
-      },
-      "erforderlich": "ja"
-    },
-    "datenStand": {
-      "label": "Datenstand",
-      "category": "beschreibung",
-      "hilfe": "Freitext-Datum, z.B. 'Stand: Januar 2025'. Leer = ausgeblendet.",
-      "format": {
-        "typ": "string",
-        "laenge": 60
-      },
-      "default": "",
-      "erforderlich": "nein"
-    },
-    "weiterfuehrendeLinks": {
-      "label": "Weiterführende Links",
-      "category": "beschreibung",
-      "hilfe": "Verwandte Datensätze / Hintergrundquellen (Markdown/HTML). Leer = ausgeblendet.",
-      "format": {
-        "typ": "markdown"
-      },
-      "default": "",
-      "erforderlich": "nein"
-    },
-    "brandingCSS": {
-      "label": "Zusätzliches Branding-CSS",
-      "category": "sonstiges",
-      "hilfe": "Optionaler CSS-Code für die konkrete App-Instanz.",
-      "default": "",
-      "format": {
-        "typ": "string",
-        "laenge": 10000
-      },
-      "erforderlich": "nein"
-    },
-    "brandingCSSFile": {
-      "label": "Branding-CSS-Datei",
-      "category": "sonstiges",
-      "hilfe": "Optionale URL zu einer zusätzlichen CSS-Datei für die konkrete App-Instanz.",
-      "default": "",
-      "format": {
-        "typ": "url",
-        "laenge": 500
-      },
-      "erforderlich": "nein"
-    }
-  },
-  "daten": {
-    "beschreibung": "Die POIs-App verarbeitet konfigurierbare Open-Data-Ressourcen aus dem Open Data Portal (z.B. JSON- oder CSV-Endpunkte).",
-    "schema": "assets/schema.json",
-    "beispiel": "",
-    "beispiel-url": ""
-  },
-  "branding-css": ""
+    "branding-css": ""
 }
