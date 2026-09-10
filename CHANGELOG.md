@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.31.2 - 2026-09-10
+- **TECH (PO-L1):** Ungenutzter Helfer `formatTextWithLineBreaks` entfernt. Er wurde nirgends aufgerufen, hätte aber bei Reaktivierung HTML zurückgegeben und den übrigen Text unverändert durchgereicht (XSS-Senke) sowie unbrauchbare `tel:`-Links (mit Leerzeichen/Klammern) erzeugt.
+- **TECH (PO-L2):** ungenutzter Helfer `isLeerErgebnis` entfernt; `addToHead` gibt `""` statt `undefined` zurück (Angleichung an `odas-app-parkflaechen`).
+- **Unverändert (dokumentierte Legacy-Sonderarchitektur):** modulglobale Kartenreferenzen (`map`, `mapDisposed`, `mapLoadToken`), eigene `index.html`/Navigationsmuster mit Sidebar außerhalb `#main-content`, statische Bibliotheks-Tags, minimale Fehlerpfade (`check-fehler-render`: `val:2/rend:1`).
+
 ## 1.31.1 - 2026-09-07
 - **FIX:** Frictionless-Härtung: `daten.beispiel`/`beispiel-url` befüllt (Schema beschreibt belegt die normalisierten POI-Daten der gewählten CSV). package_show-Default bleibt (4B-Ausnahme, Rot-Beleg im REPORT).
 

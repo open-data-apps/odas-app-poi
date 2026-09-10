@@ -349,15 +349,6 @@ function renderOdasFehler(container, error, kontext = {}) {
   container.innerHTML = `<div class="alert ${alertClass}" role="alert"><strong>${escapeHtml(titel)}</strong><p class="mb-1">${escapeHtml(info.hinweis)}</p>${urlZeile}<details class="small"><summary>Details</summary><code>${escapeHtml(info.detail || String(error))}</code></details></div>`;
 }
 
-function isLeerErgebnis(json) {
-  if (!json) return true;
-  if (Array.isArray(json) && json.length === 0) return true;
-  if (Array.isArray(json.records) && json.records.length === 0) return true;
-  if (Array.isArray(json.results) && json.results.length === 0) return true;
-  if (json.result && Array.isArray(json.result.records) && json.result.records.length === 0) return true;
-  return false;
-}
-
 
 async function initializeMap(configdata) {
   // F-70: Dieser Aufruf beginnt einen neuen Ladevorgang – eine evtl. gesetzte
@@ -653,20 +644,12 @@ function parseCSV(csvText) {
   return { pois, verworfen };
 }
 
-// Funktion zum Ersetzen von "\n" durch Zeilenumbrüche
-function formatTextWithLineBreaks(text) {
-  return text
-    .replace(/\n/g, "<br>")
-    .replace(
-      /(\+?\d[\d\s()-]{4,}\d)/g,
-      '<a href="tel:$1" class="phone-link">$1</a>'
-    );
-}
-
 /*
  * Diese Funktion kann Bibliotheken und benötigte Skripte laden.
  * Sie hängt den zurückgegebenen HTML Code in die Head Section an.
 
  * @returns {string} - HTML mit script, link, etc. Tags
  */
-function addToHead() {}
+function addToHead() {
+  return ``;
+}
