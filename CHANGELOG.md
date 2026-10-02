@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.31.3 - 2026-10-02
+- ENH: Verwendete ODAS-Dienste in `odas-services` deklariert.
+
 ## 1.31.2 - 2026-09-10
 - **TECH (PO-L1):** Ungenutzter Helfer `formatTextWithLineBreaks` entfernt. Er wurde nirgends aufgerufen, hätte aber bei Reaktivierung HTML zurückgegeben und den übrigen Text unverändert durchgereicht (XSS-Senke) sowie unbrauchbare `tel:`-Links (mit Leerzeichen/Klammern) erzeugt.
 - **TECH (PO-L2):** ungenutzter Helfer `isLeerErgebnis` entfernt; `addToHead` gibt `""` statt `undefined` zurück (Angleichung an `odas-app-parkflaechen`).
