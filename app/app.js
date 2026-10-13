@@ -436,10 +436,12 @@ async function initializeMap(configdata) {
       verworfenGesamt += verworfen;
 
       parsedPOIs.forEach((poi) => {
-        if (poiNames.has(poi.name)) {
+        // F-140: Namen sind keine Standortidentität. IDs sind nur innerhalb ihrer Quelle eindeutig.
+        const identity = JSON.stringify([resource.id || resource.url, poi.id || [poi.name, poi.latitude, poi.longitude, poi.description]]);
+        if (poiNames.has(identity)) {
           return;
         }
-        poiNames.add(poi.name);
+        poiNames.add(identity);
 
         const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${poi.latitude},${poi.longitude}`;
         const popupContent = `
@@ -621,6 +623,7 @@ function parseCSV(csvText) {
   const iLat = idx("latitude", "lat", "breitengrad");
   const iLon = idx("longitude", "lon", "lng", "längengrad", "laengengrad");
   const iDesc = idx("description", "beschreibung", "info");
+  const iId = idx("id", "_id", "uuid", "objectid");
   const spalte = (cols, i, fallback) =>
     (cols[i !== -1 ? i : fallback] || "").trim();
 
@@ -635,6 +638,7 @@ function parseCSV(csvText) {
       return;
     }
     pois.push({
+      id: iId >= 0 ? String(cols[iId] || "").trim() : "",
       name,
       latitude,
       longitude,

@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.31.4 - 2026-10-08
+- FIX: F-140: Gleichnamige Standorte erhalten; Duplikate über quellgebundene ID oder Standortkombination statt allein über Namen erkennen.
+
 ## 1.31.3 - 2026-10-02
 - ENH: Verwendete ODAS-Dienste in `odas-services` deklariert.
 
